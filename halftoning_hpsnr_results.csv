@@ -1,19 +1,7 @@
 Image,Method,Parameter,HPSNR
-Baboon-image.png,Ordered Dithering,N=2,6.444563803854146
-Baboon-image.png,Ordered Dithering,N=4,6.416007927238048
-Baboon-image.png,Ordered Dithering,N=8,6.4174798519942104
-Baboon-image.png,Ordered Dithering,N=16,6.425977030134308
-Baboon-image.png,Error Diffusion,Kernel=floyd-steinberg,6.464591334545214
-Baboon-image.png,Error Diffusion,Kernel=stucki,7.0549587303310055
-Baboon-image.png,Dot Diffusion,Block Size=3,7.998646851913467
-Baboon-image.png,Dot Diffusion,Block Size=5,7.874987878958798
-Baboon-image.png,Dot Diffusion,Block Size=7,7.816707524917054
-F-16-image.png,Ordered Dithering,N=2,6.992066669956611
-F-16-image.png,Ordered Dithering,N=4,7.529309716851971
-F-16-image.png,Ordered Dithering,N=8,7.526042605471707
-F-16-image.png,Ordered Dithering,N=16,7.548601406004174
-F-16-image.png,Error Diffusion,Kernel=floyd-steinberg,7.571926801029383
-F-16-image.png,Error Diffusion,Kernel=stucki,10.444061354238341
-F-16-image.png,Dot Diffusion,Block Size=3,11.221882072759735
-F-16-image.png,Dot Diffusion,Block Size=5,11.000646438556515
-F-16-image.png,Dot Diffusion,Block Size=7,10.837486868104227
+Baboon-image.png,Dot Diffusion,Block Size=3,6.723356815551682
+Baboon-image.png,Dot Diffusion,Block Size=5,5.988096280354062
+Baboon-image.png,Dot Diffusion,Block Size=7,5.842930562183545
+F-16-image.png,Dot Diffusion,Block Size=3,8.760765112554166
+F-16-image.png,Dot Diffusion,Block Size=5,4.12885138231246
+F-16-image.png,Dot Diffusion,Block Size=7,3.4900604562289756

@@ -86,15 +86,48 @@ def direct_binary_search(img, iterations=50, tolerance=1e-3):
 
 def dot_diffusion(img, N=3):
     img = img.convert('L')
-    pixels = np.array(img)
+    pixels = np.array(img, dtype=np.float32)
     h, w = pixels.shape
     dot_diffused_img = np.zeros((h, w), dtype=np.uint8)
-    
+
+    # 定義點擴散處理順序表 (示例，按左上到右下順序處理)
+    order_table = [
+        [1, 2, 3],
+        [4, 5, 6],
+        [7, 8, 9]
+    ]
+    order_table = np.array(order_table)
+
+    # 定義擴散係數
+    diffusion_weights = {
+        (0, 1): 7 / 16,  # 右
+        (1, -1): 3 / 16, # 左下
+        (1, 0): 5 / 16,  # 下
+        (1, 1): 1 / 16   # 右下
+    }
+
+    # 遍歷區塊
     for i in range(0, h, N):
         for j in range(0, w, N):
-            avg = np.mean(pixels[i:i + N, j:j + N])
-            dot_diffused_img[i:i + N, j:j + N] = 255 if avg > 128 else 0
-            
+            # 將當前 N x N 區塊與處理順序表對應
+            block = pixels[i:i + N, j:j + N].copy()
+            block_order = order_table[:block.shape[0], :block.shape[1]]
+            sorted_indices = np.argsort(block_order, axis=None)
+
+            # 逐點進行擴散
+            for index in sorted_indices:
+                x, y = divmod(index, block.shape[1])
+                old_pixel = block[x, y]
+                new_pixel = 255 if old_pixel > 128 else 0
+                dot_diffused_img[i + x, j + y] = new_pixel
+                error = old_pixel - new_pixel
+
+                # 擴散誤差到周圍像素
+                for (dx, dy), weight in diffusion_weights.items():
+                    nx, ny = x + dx, y + dy
+                    if 0 <= nx < block.shape[0] and 0 <= ny < block.shape[1]:
+                        block[nx, ny] += error * weight
+
     return Image.fromarray(dot_diffused_img)
 
 def calculate_hpsnr(original_img, processed_img):
@@ -115,7 +148,7 @@ for filename in os.listdir(image_folder):
         img_path = os.path.join(image_folder, filename)
         img = Image.open(img_path)
 
-        # Ordered Dithering Experiments with different matrix sizes
+        # # Ordered Dithering Experiments with different matrix sizes
         for N in [2, 4, 8, 16]:
             ordered_img = ordered_dithering(img, N)
             ordered_img.save(f'output_ordered_dithering/{filename.split(".")[0]}_ordered_N{N}.png')
@@ -123,7 +156,7 @@ for filename in os.listdir(image_folder):
             print(f'{filename} - Ordered Dithering (N={N}): HPSNR = {hpsnr_value:.2f}')
             results.append([filename, 'Ordered Dithering', f'N={N}', hpsnr_value])
 
-        # Error Diffusion Experiments with different kernels
+        # # Error Diffusion Experiments with different kernels
         for kernel in ['floyd-steinberg', 'stucki']:
             error_diffused_img = error_diffusion(img, kernel)
             error_diffused_img.save(f'output_error_diffusion/{filename.split(".")[0]}_error_{kernel}.png')
